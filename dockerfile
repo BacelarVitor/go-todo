@@ -1,7 +1,7 @@
 FROM golang:1.18.1-alpine AS base
 WORKDIR /app
 
-ENV GO111MODULE="on"
+ENV GO111MODULE="auto"
 ENV GOOS="linux"
 ENV CGO_ENABLED=0
 
@@ -17,7 +17,7 @@ FROM base AS dev
 WORKDIR /app
 
 RUN go get -u github.com/cosmtrek/air && go install github.com/go-delve/delve/cmd/dlv@latest
-EXPOSE 5000
+EXPOSE 3000
 EXPOSE 2345
 
 ENTRYPOINT ["air"]
@@ -33,6 +33,6 @@ RUN go build -o todo -a .
 
 FROM alpine:latest as prod
 COPY --from=builder /app/todo /usr/local/bin/todo
-EXPOSE 5000
+EXPOSE 3000
 
 ENTRYPOINT ["/usr/local/bin/todo"]
